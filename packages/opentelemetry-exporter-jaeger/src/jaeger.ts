@@ -17,7 +17,6 @@
 import * as api from '@opentelemetry/api';
 import { ExportResult, NoopLogger } from '@opentelemetry/core';
 import { ReadableSpan, SpanExporter } from '@opentelemetry/tracing';
-import { Socket } from 'dgram';
 import { spanToThrift } from './transform';
 import * as jaegerTypes from './types';
 import { OT_REQUEST_HEADER } from './utils';
@@ -56,10 +55,6 @@ export class JaegerExporter implements SpanExporter {
       this._sender = localConfig.endpoint = new jaegerTypes.UDPSender(
         localConfig
       );
-    }
-
-    if (this._sender._client instanceof Socket) {
-      // unref socket to prevent it from keeping the process running
       this._sender._client.unref();
     }
 
